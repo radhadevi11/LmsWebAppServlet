@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="LmsAppJDBC">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../LmsAppJDBC/out/artifacts/LmsAppJDBC_jar/LmsAppJDBC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
