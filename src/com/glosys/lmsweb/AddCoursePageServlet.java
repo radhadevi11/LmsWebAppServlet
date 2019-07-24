@@ -19,6 +19,29 @@ public class AddCoursePageServlet extends HttpServlet {
         response.setContentType("text/html");
         CourseCategoryController courseCategoryController = new CourseCategoryController();
         List<CourseCategory> courseCategories = courseCategoryController.getCourseCategories();
+
+        String courseName = request.getParameter("courseName");
+        String courseCode = request.getParameter("courseCode");
+        String syllabus = request.getParameter("syllabus");
+        Integer courseCategoryId = 0 ;
+        boolean workshopEligibility = Boolean.parseBoolean(request.getParameter("workshop_eligibility"));
+        boolean inplantTrainingEligibility = Boolean.parseBoolean(request.getParameter("inplant_training_eligibility"));
+        boolean corporateTrainingEligibility = Boolean.parseBoolean(request.getParameter("corporate_training_eligibility"));
+        boolean researchTrainingEligibility = Boolean.parseBoolean(request.getParameter("research_training_eligibility"));
+
+        if((request.getParameter("cc") != null)) {
+           courseCategoryId = Integer.parseInt(request.getParameter("cc"));
+        }
+
+        if(courseName == null){
+            courseName = "";
+        }
+        if(courseCode == null){
+            courseCode = "";
+        }
+        if(syllabus == null){
+            syllabus = "";
+        }
         PrintWriter out = response.getWriter();
         out.println("<!DOCTYPE html>\n" +
                 "<html>\n" +
@@ -61,12 +84,13 @@ public class AddCoursePageServlet extends HttpServlet {
                 "<div>\n" +
                 "    <form action=\"addCourse\">\n" +
                 "        <form action=\"addcourse\" method=\"POST\">\n" +
-                "\n" +
-                "            <input type=\"text\" name=\"courseName\" placeholder=\"Course name\"><br>\n" +
-                "            <input type=\"text\" name=\"courseCode\" placeholder=\"Course code\"  ><br>\n" +
+                "\n"+
+                "<input type=\"text\" name=\"courseName\" value=\""+courseName+"\" placeholder=\"Course name\"><br>\n" +
+                "            <input type=\"text\" name=\"courseCode\" value=\""+courseCode+"\" placeholder=\"Course code\"  ><br>\n" +
                 "            <span style=\"font-size:18px;\">Syllabus</span>\n" +
                 "            <br>\n" +
                 "            <textarea name=\"syllabus\" rows=\"10\" cols=\"30\" placeholder=\"Syllabus\" >\n" +
+                syllabus+"\n"+
                 "</textarea>\n" +
                 "            <br>\n" +
                 "            <span style=\"font-size:18px;\">Training Course</span>\n" +
@@ -75,14 +99,39 @@ public class AddCoursePageServlet extends HttpServlet {
         out.println( "            <select name=\"cc\">\n");
         out.println(     "\n" );
         for (CourseCategory courseCategory : courseCategories){
-            out.println("<option> value=\""+courseCategory.getId()+"\">"+courseCategory.getName()+"</option>");
+            if(courseCategoryId == courseCategory.getId() ) {
+                out.println("<option value=\"" + courseCategory.getId() + "\" selected>" + courseCategory.getName() + "</option> ");
+            }
+            else {
+                out.println("<option value=\"" + courseCategory.getId() + "\">" + courseCategory.getName() + "</option>");
+            }
         }
-        out.println("          </select>\n" );
-        out.println(        " <input type=\"checkbox\" name=\"workshop_eligibility\" value=\"TRUE\"  >Workshop Eligibility<br>\n" +
-                "            <input type=\"checkbox\" name=\"inplant_training_eligibility\" value=\"TRUE\" >Inplant Training Eligibility<br>\n" +
-                "            <input type=\"checkbox\" name=\"corporate_training_eligibility\" value=\"TRUE\">Corporate Training Eligibility<br>\n" +
-                "            <input type=\"checkbox\" name=\"research_training_eligibility\" value=\"TRUE\">Research Training Eligibility<br>\n" +
-                "            <br>\n" +
+        out.println("</select>\n" );
+        if (workshopEligibility == true) {
+            out.println("<input type=\"checkbox\" name=\"workshop_eligibility\" value=\"TRUE\" checked >Workshop Eligibility<br>\n");
+        }
+        else {
+            out.println("<input type=\"checkbox\" name=\"workshop_eligibility\" value=\"TRUE\" >Workshop Eligibility<br>\n");
+        }
+        if(inplantTrainingEligibility == true) {
+            out.println(" <input type=\"checkbox\" name=\"inplant_training_eligibility\" value=\"TRUE\" checked >Inplant Training Eligibility<br>\n");
+        }
+        else {
+            out.println(" <input type=\"checkbox\" name=\"inplant_training_eligibility\" value=\"TRUE\" >Inplant Training Eligibility<br>\n");
+        }
+        if(corporateTrainingEligibility == true) {
+            out.println("<input type=\"checkbox\" name=\"corporate_training_eligibility\" value=\"TRUE\" checked>Corporate Training Eligibility<br>\n");
+        }
+        else {
+            out.println("<input type=\"checkbox\" name=\"corporate_training_eligibility\" value=\"TRUE\">Corporate Training Eligibility<br>\n");
+        }
+        if(researchTrainingEligibility == true) {
+            out.println("<input type=\"checkbox\" name=\"research_training_eligibility\" value=\"TRUE\" checked>Research Training Eligibility<br>\n");
+        }
+        else {
+            out.println("<input type=\"checkbox\" name=\"research_training_eligibility\" value=\"TRUE\">Research Training Eligibility<br>\n");
+        }
+        out.println(" <br>\n" +
                 "            <br>\n" +
                 "            <input type=\"submit\" value=\"Save\" >\n" +
                 "\n" +

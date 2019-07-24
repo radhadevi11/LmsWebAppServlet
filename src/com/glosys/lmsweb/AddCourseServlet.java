@@ -18,6 +18,8 @@ import java.util.List;
 
 public class AddCourseServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        CourseController courseController = new CourseController();
+
         String courseName = request.getParameter("courseName");
         String courseCode = request.getParameter("courseCode");
         String syllabus = request.getParameter("syllabus");
@@ -27,8 +29,6 @@ public class AddCourseServlet extends HttpServlet {
         boolean corporateTrainingEligibility = Boolean.parseBoolean(request.getParameter("corporate_training_eligibility"));
         boolean researchTrainingEligibility = Boolean.parseBoolean(request.getParameter("research_training_eligibility"));
 
-
-        CourseController courseController = new CourseController();
         Course course = new Course(courseName,
                 courseCode,
                 syllabus,
@@ -37,7 +37,18 @@ public class AddCourseServlet extends HttpServlet {
                 researchTrainingEligibility,
                 inplantTrainingEligibility,
                 corporateTrainingEligibility);
-        courseController.saveCourse(course);
+
+
+        if(courseController.isExistingCourse(courseCode)){
+            response.sendRedirect(request.getContextPath()+"/addCoursePage?courseName="+courseName+"&courseCode="+ courseCode
+            +"&syllabus="+syllabus+"&cc="+courseCategoryId+"&workshop_eligibility="+workshopEligibility+
+                            "&research_training_eligibility="+researchTrainingEligibility+
+                            "&inplant_training_eligibility="+inplantTrainingEligibility+
+                    "&corporate_training_eligibility="+corporateTrainingEligibility);
+        }
+        else {
+            courseController.saveCourse(course);
+        }
 
     }
 }
