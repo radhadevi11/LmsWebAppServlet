@@ -71,29 +71,21 @@ public class AddCourseServlet extends HttpServlet {
                 "<h3><center>Add Course</center></h3>\n" +
                 "\n" +
                 "<div>\n" +
-
-                "        <form action=\"addCourse\" method=\"POST\">\n" +
+                "<form action=\"addCourse\" method=\"POST\">\n" +
                 "\n"+
-                "<input type=\"text\" name=\"courseName\" value=\""+course.getName()+"\" placeholder=\"Course name\"><br>\n" +
-                "            <input type=\"text\" name=\"courseCode\" value=\""+course.getCode()+"\" placeholder=\"Course code\"  ><br>\n" +
-                "            <span style=\"font-size:18px;\">Syllabus</span>\n" +
-                "            <br>\n" +
-                "            <textarea name=\"syllabus\" rows=\"10\" cols=\"30\" placeholder=\"Syllabus\" >\n" +
-                course.getSyllabus()+"\n"+
-                "</textarea>\n" +
-                "            <br>\n" +
-                "            <span style=\"font-size:18px;\">Training Course</span>\n" +
-                "            <br>\n" +courseCategoryDropDown(course, courseCategories)+
-
-         workShopCheckBox(course)+inplantTrainingCheckBox(course) + corporateTrainingCheckBox(course)+
-                researchTrainingCheckBox(course)+
-
-        " <br>\n" +
-                "            <br>\n" +
-                "            <input type=\"submit\" value=\"Save\" >\n" +
+                createTextBox("courseName", course.getName(),"Course Name")+
+                createTextBox("courseCode", course.getCode(),"Course Code")+
+                createTextArea("syllabus", course.getSyllabus(), "Syllabus")+
+                courseCategoryDropDown(course, courseCategories)+
+                createCheckBox(course.isWorkshopEligibility(),"Workshop Eligibility","research_training_eligibility" )+
+                createCheckBox(course.isInplantTrainingEligibility(), "Inplant Training Eligibility", "inplant_training_eligibility")+
+                createCheckBox(course.isCorporateTrainingEligibility(), "Corporate Training Eligibility", "corporate_training_eligibility")+
+                createCheckBox(course.isResearchTrainingEligibility(), "research_training_eligibility", "Research Training Eligibility" )+
+                " <br>\n" +
+                " <br>\n" +
+                "<input type=\"submit\" value=\"Save\" >\n" +
                 "\n" +
-                "        </form>\n" +
-                "    </form>\n" +
+                " </form>\n" +
                 "</div>\n" +
                 "\n" +
                 "</body>\n" +
@@ -101,52 +93,41 @@ public class AddCourseServlet extends HttpServlet {
 
     }
 
-    private String corporateTrainingCheckBox(Course course) {
-        if(course.isCorporateTrainingEligibility() == true) {
-           return "<input type=\"checkbox\" name=\"corporate_training_eligibility\" value=\"TRUE\" checked>Corporate Training Eligibility<br>\n";
-        }
-        else {
-           return  "<input type=\"checkbox\" name=\"corporate_training_eligibility\" value=\"TRUE\">Corporate Training Eligibility<br>\n";
-        }
-    }
-
-    private String workShopCheckBox(Course course) {
-        if (course.isWorkshopEligibility() == true) {
-            return "<input type=\"checkbox\" name=\"workshop_eligibility\" value=\"TRUE\" checked >Workshop Eligibility<br>\n";
-        }
-        else {
-            return "<input type=\"checkbox\" name=\"workshop_eligibility\" value=\"TRUE\" >Workshop Eligibility<br>\n";
-        }
-    }
-
-    private String inplantTrainingCheckBox(Course course){
-        if(course.isInplantTrainingEligibility() == true) {
-           return  " <input type=\"checkbox\" name=\"inplant_training_eligibility\" value=\"TRUE\" checked >Inplant Training Eligibility<br>\n";
-        }
-        else {
-            return " <input type=\"checkbox\" name=\"inplant_training_eligibility\" value=\"TRUE\" >Inplant Training Eligibility<br>\n";
-        }
-    }
-
-    private String researchTrainingCheckBox(Course course){
-        if(course.isResearchTrainingEligibility() == true) {
-            return "<input type=\"checkbox\" name=\"research_training_eligibility\" value=\"TRUE\" checked>Research Training Eligibility<br>\n";
-        }
-        else {
-           return  "<input type=\"checkbox\" name=\"research_training_eligibility\" value=\"TRUE\">Research Training Eligibility<br>\n";
-        }
-    }
 
     private String courseCategoryDropDown(Course course, List<CourseCategory> courseCategories) {
-        String dropDown =  "<select name=\"cc\">\n";
+        String dropDown =  "<span style=\"font-size:18px;\">Training Course</span>\n" +
+                          "<br>\n"+"<select name=\"cc\">\n";
         for (CourseCategory courseCategory : courseCategories){
             if(course.getCourseCategory().getId() == courseCategory.getId() ) {
-               dropDown += "<option value=\"" + courseCategory.getId() + "\" selected>" + courseCategory.getName() + "</option> ";
+                dropDown += "<option value=\"" + courseCategory.getId() + "\" selected>" + courseCategory.getName()
+                        + "</option> ";
             }
             else {
                 dropDown += "<option value=\"" + courseCategory.getId() + "\">" + courseCategory.getName() + "</option>";
             }
         }
         return dropDown+ "</select>\n";
+    }
+
+    private String createCheckBox(boolean eligibility, String caption, String checkBoxName){
+        if(eligibility) {
+            return "<input type=\"checkbox\" name=\""+checkBoxName+"\" value=\"TRUE\" checked>"+caption+"<br>\n";
+        }
+        else {
+            return  "<input type=\"checkbox\" name=\""+checkBoxName+"\" value=\"TRUE\">"+caption+"<br>\n";
+        }
+    }
+
+    private String createTextBox(String textBoxName, String textBoxValue, String placeHolder){
+        return "<input type=\"text\" name=\""+textBoxName+"\" value=\""+textBoxValue+"\" placeholder=\""+placeHolder+"\">"
+                + "<br>\n";
+    }
+
+    private String createTextArea(String textAreaName, String textAreaValue, String placeHolder){
+        return "<span style=\"font-size:18px;\">"+placeHolder+"</span>\n" +
+                "<br>\n" +
+                "<textarea name=\""+textAreaName+"\" rows=\"10\" cols=\"30\" placeholder=\""+placeHolder+"\" >\n" +
+                textAreaValue+"\n"+
+                "</textarea>"+ "<br>\n";
     }
 }
